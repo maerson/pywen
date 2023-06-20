@@ -1,0 +1,448 @@
+
+
+///////////////////////// TABLE DEFINATION ////////////////////////////////////////////////
+//
+// Table 4. A table with externally sourced CSV data
+// [format="csv",cols="^1,4*2",options="header"]
+// |===================================================
+// ID,Customer Name,Contact Name,Customer Address,Phone
+// include::customers.csv[]
+// |===================================================
+//
+// .DVS formatted table
+// [width="70%",format="dsv"]
+// |====================================
+// root:x:0:0:root:/root:/bin/bash
+// daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+// bin:x:2:2:bin:/bin:/bin/sh
+// sys:x:3:3:sys:/dev:/bin/sh
+// sync:x:4:65534:sync:/bin:/bin/sync
+// games:x:5:60:games:/usr/games:/bin/sh
+// |====================================
+//
+// .Table from CSV data
+// [%header,format=csv]
+// |===
+// Artist,Track,Genre
+// Baauer,Harlem Shake,Hip Hop
+// The Lumineers,Ho Hey,Folk Rock
+// |===
+//
+// .Table from CSV data using shorthand (Asciidoctor only)
+// ,===
+// Artist,Track,Genre
+// Baauer,Harlem Shake,Hip Hop
+// ,===
+//
+// .Table from CSV data in file
+// |===
+// include::customers.csv[]
+// |===
+//
+// .Table from DSV data using shorthand (Asciidoctor only)
+// :===
+// Artist:Track:Genre
+// Robyn:Indestructable:Dance
+// :===
+
+// Use tables sparingly:
+//   When technical users first start creating documents, tables (complete with column spanning and table nesting) are often
+//   considered very important. The reality is that tables are seldom used, even in technical documentation.
+//   Try this exercise: thumb through your library of technical books, you’ll be surprised just how seldom tables are actually
+//   used, even less seldom are tables containing block elements (such as paragraphs or lists) or spanned cells. This is no
+//   accident, like figures, tables are outside the normal document flow — tables are for consulting not for reading.
+//   Tables are designed for, and should normally only be used for, displaying column oriented tabular data.
+// A Python regular expression (psv and dsv formats) or a single character (csv format).
+//
+//
+// +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// |                    |                 row               |          column                                  |    cell                                                  |
+// |-----------+--------+-----------------------------------+-------------------------------------------------------------------------------------------------------------+
+// |             support| delimeter |arrangement|multiline  |delimeter|  width                     |  height   |  content  |  multline |  v-span   |  h-span              |
+// |----------------+---+-----------+-----------+-----------+---------+----------------------------+-----------+-----------+-----------+-----------+----------------------+
+// |1.              | Y |\----      |[]\n[]     |possiblely |  |      |分隔符决定不可能由header决定|multiline  |multiline  |yes        |^          |   ||, <|             |
+// |2. wiki-table   | Y |\----      |[][][]     |possiblely |  |      |header决定                  |multiline  |multiline  |yes        |header界定 |   通过header界定span |
+// |3.              | n |\----      |[][][]     |possiblely |  |      |分隔符决定                  |multiline  |multiline  |yes        |^          |   ||, <|             |
+// |4.              | Y |\----      |[][][]     |possiblely |space    |header决定                  |multiline  |multiline  |yes        |^          |   ||, <|             |
+// |5. wiki table   | n |\----      |[][][]     |possiblely |space    |分隔符决定                  |one line   |word       |yes        |^          |   ^                  |
+// |6.              | Y |\n         |[][][]     |no         |  |      |分隔符决定                  |one line   |single line|no         |^          |   ||, <|             |
+// |7.              | Y |\n         |[][][]     |no         |  |      |header决定                  |one line   |single line|no         |^          |   通过header界定span |
+// |8.              | Y |\n         |[][][]     |no         |space    |分隔符决定                  |one line   |single word|no         |^          |   <                  |
+// |9.              | Y |\n         |[][][]     |no         |space    |header决定                  |one line   |single line|no         |^          |   <                  |
+// |10.             | n |\n         |[]\n[]     |           |         |                            |           |           |           |           |                      |
+// |11.             | Y |blank line |[]\n[]     |possiblely |  |      |分隔符决定不可能由header决定|multiline  |multiline  |yes        |^          |   ||, <|             |
+// |12.             | n |blank line |[][][]     |possiblely |  |      |分隔符决定                  |multiline  |multiline  |yes        |^          |   ||, <|             |
+// |13.             | n |blank line |[][][]     |possiblely |  |      |header决定                  |multiline  |multiline  |yes        |^          |   通过header界定span |
+// |14.             | Y |blank line |[][][]     |possiblely |space    |header决定                  |multiline  |multiline  |yes        |^          |   <                  |
+// |15.             | n |blank line |[][][]     |possiblely |space    |分隔符决定                  |one line   |word       |no         |^          |   <                  |
+// +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//
+// +---------------------------------------------------------------------------------------------+
+// |              trait
+// |-----------+--------+------------------------------------------------------------------------+
+// |             support| delimeter |delimeter|header |分隔符|空白行 |-----行|行含有| |
+// |----------------+---+-----------+---------+--------------------------------------------------+
+// |1. wiki-table   | Y |\----      |  |      | ===== |  no  | maybe |  yes  |  yes   |
+// |2. grid-table   | Y |\----      |  |      | ==+== |  |   |  no   |  yes  |  yes   |
+// |4.              | Y |\----      |space    | == == | space|  no   |  yes  |  maybe |
+// |6.              | Y |\n         |  |      | ===== |  no  |  no   |  no   |  yes   |
+// |7.              | Y |\n         |  |      | ==+== |  |   |  no   |  no   |  yes   |
+// |8.              | Y |\n         |space    | ===== |  no  |  no   |  no   |  no    |
+// |9.              | Y |\n         |space    | == == | space|  no   |  no   |  maybe |
+// |11.wiki-table   | Y |blank line |  |      | ===== |  no  |  yes  |  no   |  yes   |
+// |14.             | Y |blank line |space    | == == | space|  yes  |  no   |  maybe |
+// +----------------------------------------------------------------------------------------------
+// 
+// case 1(wiki table):
+//     - row
+//       - delimeter   : ----
+//       - arrangement : []\n[]\n[]
+//       - multiline   : possibly
+//     - column
+//       - delimeter   : |
+//       - width       : decided by delimeter, not header line
+//       - height      : multi-line
+//     - cell
+//       - content     : multi-line
+//       - multline    : yes
+//       - v-span      : ^
+//       - h-span      : ||,<|
+// 
+//     ====================
+//     |a  | b
+//     | d
+//        continue
+//     |-------------------
+//     | a  || ^
+//     ====================
+// 
+// case 2(grid table):
+//     - row
+//       - delimeter   : ----
+//       - arrangement : [][][]
+//       - multiline   : possibly
+//     - column
+//       - delimeter   : |
+//       - width       : decided by header line
+//       - height      : multi-line
+//     - cell
+//       - content     : multi-line
+//       - multline    : yes
+//       - v-span      : decided by header line
+//       - h-span      : decided by header line
+// 
+// 
+//   +============+============+===========+
+//   | Header 1   | Header 2   | Header 3  |
+//   +============+============+===========+
+//   | body row 1 | column 2   | column 3  |
+//   +------------+------------+-----------+
+//   | body row 2 | Cells may span columns.|
+//   +------------+------------+-----------+
+//   | body row 3 | Cells may  | - Cells   |
+//   +------------+ span rows. | - contain |
+//   | body row 4              | - blocks. |
+//   +============+============+===========+
+// 
+// 
+// case 4:
+//     - row
+//       - delimeter   : ----
+//       - arrangement : [][][]
+//       - multiline   : possibly
+//     - column
+//       - delimeter   : space
+//       - width       : decided by header line
+//       - height      : multi-line
+//     - cell
+//       - content     : multi-line
+//       - multline    : yes
+//       - v-span      : ^
+//       - h-span      : <
+// 
+//   ===== =========== ==========
+//   a          b           c
+//   a…        ….        Continue
+//   ----- ----------- -----------
+//   ^         e            <
+//   ===== =========== ==========
+// 
+// case 6:
+//     - row
+//       - delimeter   : \n
+//       - arrangement : [][][]
+//       - multiline   : no
+//     - column
+//       - delimeter   : |
+//       - width       : decided by delimeter
+//       - height      : one line
+//     - cell
+//       - content     : single line
+//       - multline    : no
+//       - v-span      : ^
+//       - h-span      : ||, <|
+// 
+// 
+//   ==========
+//   a     | b     |  c
+//   e              || f
+//          g                 |||
+//   ^    ||
+//   ==========
+// 
+//   +=======
+//   |1 |2 |A
+//   |3 |4 |B
+//   |5 |6 |C
+//   +=======
+// 
+// 
+//   First Header | Second Header
+//   =============|================
+//   Content cell 1 | Content cell 2
+//   Content column 1 | Content column 2
+// 
+// 
+// case 7:
+//     - row
+//       - delimeter   : \n
+//       - arrangement : [][][]
+//       - multiline   : no
+//     - column
+//       - delimeter   : |
+//       - width       : decided by header line
+//       - height      : one line
+//     - cell
+//       - content     : single line
+//       - multline    : no
+//       - v-span      : ^
+//       - h-span      : covered by header line
+// 
+//   ======+=======+=====
+//   a     | b     |  c
+//   e             |  f
+//          g
+//   h     |       |
+//   ======+=======+=====
+// 
+// case 8:
+//     - row
+//       - delimeter   : \n
+//       - arrangement : [][][]
+//       - multiline   : no
+//     - column
+//       - delimeter   : space
+//       - width       : decided by delimeter
+//       - height      : one line
+//     - cell
+//       - content     : single word
+//       - multline    : no
+//       - v-span      : ^
+//       - h-span      : <
+// 
+//   ==========
+//   a b c
+//   e f g
+//   ^ < <
+//   ==========
+// 
+// 
+// case 9:
+//     - row
+//       - delimeter   : \n
+//       - arrangement : [][][]
+//       - multiline   : no
+//     - column
+//       - delimeter   : space
+//       - width       : decided by header line
+//       - height      : one line
+//     - cell
+//       - content     : single line
+//       - multline    : no
+//       - v-span      : ^
+//       - h-span      : <
+// 
+//   ===  ======  =====
+//   a       b        c
+//   ^      <         <
+//   ===  ======  =====
+// 
+// 
+//  ===== =====  ======
+//  Inputs       Output
+//  ------------ ------
+//  A      B     A or B
+//  ===== ===== ======
+//  False False False
+//  True  False True
+//  False True  True
+//  True  True  True
+//  ===== ===== ======
+// 
+// 
+// case 11(wiki table):
+//     - row
+//       - delimeter   : blank line
+//       - arrangement : []\n[]\n[]
+//       - multiline   : possibly
+//     - column
+//       - delimeter   : |
+//       - width       : decided by delimeter, not header line
+//       - height      : multi-line
+//     - cell
+//       - content     : multi-line
+//       - multline    : yes
+//       - v-span      : ^
+//       - h-span      : ||,<|
+// 
+//   =================
+//   |a  | b
+//   | d
+//      continue
+// 
+//   | a  || ^
+//   =================
+// 
+// 
+//   |=========================================================
+//   |Date |Duration |Avg HR |Notes
+//   |22-Aug-08 |10:24 | 157 |
+//   Worked out MSHR (max sustainable heart rate) by going hard
+//   for this interval.
+// 
+//   |22-Aug-08 |23:03 | 152 |
+//   Back-to-back with previous interval.
+// 
+//   |24-Aug-08 |40:00 | 145 |
+//   Moderately hard interspersed with 3x 3min intervals (2min
+//   hard + 1min really hard taking the HR up to 160).
+// 
+//   |=========================================================
+// 
+// 
+// case 14:
+//     - row
+//       - delimeter   : blank line
+//       - arrangement : [][][]
+//       - multiline   : possibly
+//     - column
+//       - delimeter   : space
+//       - width       : covered by header line
+//       - height      : multi-line
+//     - cell
+//       - content     : multi-line
+//       - multline    : yes
+//       - v-span      : ^
+//       - h-span      : <
+// 
+//   ===== ======== ==========
+//   a       b        c
+//                    continue
+// 
+//   ^      <         <
+//   ===== ======== ==========
+//
+table:
+	LineBreak '.. ' 'table' id=ID (':' title=r'[^\n]+')?
+	//第二行决定table 的indent
+	
+	;
+    
+
+// ======================================================
+// Lexer specification
+//
+
+// -------------------------
+// Literal string
+//
+// ANTLR makes no distinction between a single character literal and a
+// multi-character string. All literals are single quote delimited and
+// may contain unicode escape sequences of the form \uxxxx, where x
+// is a valid hexadecimal number (per Unicode standard).
+
+STRING_LITERAL
+   : SQuoteLiteral
+   ;
+
+
+// -------------------------
+// Identifiers - allows unicode rule/token names
+
+ID : Id ;
+
+// -------------------------
+// Whitespace
+
+WS : Ws + -> channel (HIDDEN) ;
+
+LineBreak: [\r]? [\n];
+// ------------------------------------------------------------------------------
+// Grammar specific Keywords, Punctuation, etc.
+
+fragment Id : NameStartChar NameChar* ;
+
+// ======================================================
+// Lexer fragments
+//
+// -----------------------------------
+// Whitespace & Comments
+
+fragment Ws
+   : [ \t] | [\r\n\f]
+   ;
+
+// -----------------------------------
+// Escapes
+// Any kind of escaped character that we can embed within literal strings.
+
+fragment EscSeq
+   : Esc ([btnfr"'\\] | UnicodeEsc | . | EOF)
+   ;
+
+
+fragment EscAny
+   : Esc .
+   ;
+
+
+fragment UnicodeEsc
+   : 'u' (HexDigit (HexDigit (HexDigit HexDigit?)?)?)?
+   ;
+
+// -----------------------------------
+// Digits
+
+fragment HexDigit
+   : [0-9a-fA-F]
+   ;
+
+
+fragment DecDigit
+   : [0-9]
+   ;
+
+// -----------------------------------
+// Literals
+
+fragment SQuoteLiteral
+   : '\'' (EscSeq | ~ ['\r\n\\])* '\''
+   ;
+   
+   
+// -----------------------------------
+// Character ranges
+
+fragment NameChar
+   : NameStartChar | '0' .. '9' | '_' | '\u00B7' 
+   | '\u0300' .. '\u036F' | '\u203F' .. '\u2040'
+   ;
+
+fragment NameStartChar
+   : 'A' .. 'Z' | 'a' .. 'z' 
+   | '\u00C0' .. '\u00D6' | '\u00D8' .. '\u00F6' | '\u00F8' .. '\u02FF' 
+   | '\u0370' .. '\u037D' | '\u037F' .. '\u1FFF' | '\u200C' .. '\u200D' 
+   | '\u2070' .. '\u218F' | '\u2C00' .. '\u2FEF' | '\u3001' .. '\uD7FF' 
+   | '\uF900' .. '\uFDCF' | '\uFDF0' .. '\uFFFD'
+   // ignores | ['\u10000-'\uEFFFF]
+   ;

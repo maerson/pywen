@@ -1,0 +1,85 @@
+Arpeggio                      109,344 |
+dhparser                           92 |
+GLRParser                          59 |
+grako                           4,279 |
+lark                           92,781 |
+lark-parser                 1,213,442 |
+parglare                        1,538 |
+parsimonious                  333,799 |
+parsing                         2,288 |
+Parsley                       101,169 |
+parso                      15,374,991 |
+parsy                         112,872 |
+ply                         6,986,620 |
+pyparsing                  72,839,110 |
+pyPEG2                         14,180 |
+regex                      18,147,697 |
+simplepeg                           8 |
+SPaG                                7 |
+spark-parser                   34,977 |
+TatSu                          76,323 |
+textX                          49,491 |
+--------------------------------------|
+cyac                              257 |
+acora                          24,085 |
+flashtext                     475,727 |
+marisa-trie                   143,576 |
+pyahocorasick                 300,856 |
+pycedar                           106 |
+dartsclone                     68,217 |
+datrie                         20,453 |
+--------------------------------------|
+ckitoolz                           22 |
+cytoolz                       660,394 |
+funcy                         661,855 |
+kitoolz                            25 |
+more-itertools             11,192,029 |
+toolz                       8,358,427 |
+--------------------------------------|
+PyYAML                    125,980,466 |
+ruamel.yaml                11,561,291 |
+ruamel.yaml.clib           10,198,229 |
+pysimdjson                     80,455 |
+jmespath                   95,239,270 |
+--------------------------------------|
+openpyxl                   19,806,184 |
+--------------------------------------|
+dill                       10,873,870 |
+--------------------------------------|
+PySnooper                     154,567 |
+pretty-errors                  22,158 |
+stackprinter                  303,197 |
+--------------------------------------|
+black                       8,637,295 |
+pylint                      7,783,296 |
+pip                        74,017,047 |
+pipdeptree                    485,087 |
+Cython                     19,262,758 |
+--------------------------------------|
+pcpp                            3,508 |
+cparser                            78 |
+pycparser                  58,499,706 |
+--------------------------------------|
+astroid                     8,077,157 |
+boltons                     1,279,249 |
+click                      77,638,677 |
+colorama                  100,215,363 |
+ctools                            231 |
+et-xmlfile                 19,798,116 |
+install                       370,128 |
+isort                      13,828,639 |
+lazy-object-proxy           9,460,320 |
+mccabe                     15,113,616 |
+mypy-extensions            25,235,917 |
+pathspec                   14,812,266 |
+platformdirs               24,476,924 |
+ppci                              150 |
+pycryptodomex              16,921,377 |
+segtok                        188,170 |
+setuptools                182,643,415 |
+six                       150,879,286 |
+tabulate                   32,078,665 |
+toml                       35,256,227 |
+tomli                      20,615,522 |
+typing_extensions          95,722,857 |
+wrapt                      41,749,526 |
