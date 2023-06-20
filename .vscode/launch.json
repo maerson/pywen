@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Module",
+            "type": "python",
+            "request": "launch",
+            "module": "pywen",
+            "justMyCode": true,
+            "cwd": "${fileDirname}",
+            "args": [
+                // 既然我们在写编译器, DSL源代码可能没有变动. 而是编译器代码改动. 所以不要生成pyc.
+                "-B",
+                "/home/tcui/pywen/tests/resources/hello_world.wen"
+            ],
+            "python": "${command:python.interpreterPath}"
+        },
+        {
+            "name": "Python Script",
+            "type": "python",
+            "request": "launch",
+            "justMyCode": true,
+            "cwd": "${fileDirname}",
+            "program": "${file}",
+            "args": [],
+            "python": "${command:python.interpreterPath}"
+        }
+    ]
+}
