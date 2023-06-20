@@ -1,0 +1,8 @@
+*.py filter=git-crypt diff=git-crypt
+*.wen filter=git-crypt diff=git-crypt
+*.meta filter=git-crypt diff=git-crypt
+*.csv filter=git-crypt diff=git-crypt
+*.xlsx filter=git-crypt diff=git-crypt
+*.md filter=git-crypt diff=git-crypt
+pywen/** filter=git-crypt diff=git-crypt
+tools/** filter=git-crypt diff=git-crypt
