@@ -6,19 +6,33 @@
     "python.testing.pytestEnabled": true,
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
     "python.languageServer": "Pylance",
+    "python.formatting.provider": "black",
     "python.formatting.blackArgs": [
         "--line-length",
         "120"
     ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.completeFunctionParens": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportOptionalMemberAccess ": false
+    },
+    "editor.inlayHints.enabled": "off",
+    "editor.wordWrap": "off",
+    "editor.guides.indentation": false,
+    "editor.guides.bracketPairs": false,
+    "editor.fontSize": 16,
+    "editor.lineHeight": 1.5,
+    "editor.letterSpacing": 0.5,
     "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    "editor.fontFamily": "JetBrains Mono, Consolas, 'Courier New', monospace",
     "editor.codeActionsOnSave": {
         "source.organizeImports": true
     },
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
-    "editor.fontSize": 16,
-    "editor.lineHeight": 1.5,
-    "editor.letterSpacing": 0.5,
     "files.exclude": {
         "**/.git": true,
         "**/__pycache__": true,
@@ -26,10 +40,38 @@
         "**/.mypy_cache": true,
         "**/.venv": true,
         "**/.ropeproject": true,
+        "**/*.egg-info": true,
+        "**/*.log": true,
         "**/.history": true
     },
     "search.exclude": {
         "**/.git": true,
         "**/.venv": true
     },
+    "activitusbar.views": [
+        {
+            "name": "explorer",
+            "codicon": "explorer-view-icon"
+        },
+        {
+            "name": "search",
+            "codicon": "search-view-icon"
+        },
+        {
+            "name": "scm",
+            "codicon": "source-control-view-icon"
+        },
+        {
+            "name": "debug",
+            "codicon": "run-view-icon"
+        },
+        {
+            "name": "extensions",
+            "codicon": "extensions-view-icon"
+        }
+    ],
+    "WenMenuBar.indentLines": true,
+    "WenMenuBar.beautify": false,
+    "WenMenuBar.outdentLines": true,
+    "WenMenuBar.toggleActivityBar": true,
 }
